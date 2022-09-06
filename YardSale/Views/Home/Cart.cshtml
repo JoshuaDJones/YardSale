@@ -1,0 +1,300 @@
+﻿@model CartViewModel
+
+<style>
+    .cart-items-container{
+        border-top: 2px solid black; 
+        width: 600px;
+    }
+    .cartItem{
+        height: 250px;
+        width: 600px;
+        border-bottom: 2px solid black;
+    }
+    .remove-cart-item-button{
+        height: 42px; 
+        width: 140px; 
+        display: flex; 
+        justify-content: center; 
+        align-items: center;
+        text-decoration: none;
+        color: black !important;
+        cursor: pointer;
+        font-size: 20px;
+        background-color: #FFBFBF !important;
+        border-radius: 15px;
+    }
+    .add-product-btn{
+        height: 42px; 
+        width: 152px; 
+        display: flex; 
+        justify-content: center; 
+        align-items: center;
+        text-decoration: none;
+        color: black !important;
+        cursor: pointer;
+        font-size: 20px;
+        background-color: #D7FFB8 !important;
+        border-radius: 15px;
+    }
+    .btnClosePurchaseConfirmation{
+        font-size: 25px; 
+        margin-right: 7px;
+        color: black !important;
+        cursor: pointer;
+    }
+    .modal_backdrop {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: rgba(120, 120, 120, 0.5);
+        height: 100%;
+        width: 100%;
+        z-index: 2;
+        display: flex;
+        justify-content: center;
+        align-items: start;
+    }
+
+    .modal_reg {
+        margin-top: 50px;
+        width: 500px;
+        background-color: white;
+        border-radius: 15px;
+        box-shadow: 1px -1px 56px 11px rgba(130,130,130,0.75);
+        -webkit-box-shadow: 1px -1px 56px 11px rgba(130,130,130,0.75);
+        -moz-box-shadow: 1px -1px 56px 11px rgba(130,130,130,0.75);
+    }
+
+    .modal-side {
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: auto;
+        transform: none;
+        min-height: 100%;
+        height: auto;
+        border-radius: 0;
+        background-color: white;
+        box-shadow: -9px -1px 34px 0px rgba(0,0,0,0.75);
+        -webkit-box-shadow: -9px -1px 34px 0px rgba(0,0,0,0.75);
+        -moz-box-shadow: -9px -1px 34px 0px rgba(0,0,0,0.75);
+        animation-name: sideModalAnimation;
+        animation-duration: .25s;
+        width: 600px;
+        background-color: #FAEDCD;
+    }
+
+@@keyframes sideModalAnimation {
+  0%   {right: -100px; opacity: 0;}
+  100% {right: 0px; opacity: 1.0;}
+}
+
+
+
+.success-msg{
+    top: 33px;
+    left: 98px;
+    background-color: #D7FFB8;
+    border: 3px dashed green;
+    border-radius: 15px;
+    animation-duration: 8s;
+    animation-name: success-msg-animation;
+    padding: 15px;
+    margin-top: 10px;
+    opacity: 0;
+}
+
+@@keyframes success-msg-animation{
+  0%   {opacity: 1.0;}
+  100% {opacity: 0.0;}
+}
+</style>
+<h1 style="margin: unset;" class="handlee-font">Cart Items</h1>
+
+@if(Model.CartProducts.Count < 1)
+{
+    <div class="cart-items-container">
+        <label style="font-size: 25px; margin: 20px 40px;" class="handlee-font">You have no items in your cart.</label>
+    </div>
+    
+        @if(Model.OrderSuccess)
+        {
+            <div class="success-msg" style="@(Model.OrderSuccess ? "display: block;" : "display: none")">
+                <label style="font-size: 25px;" class="handlee-font">Your order has successfully been processed!</label>
+            </div>
+        }
+
+}
+else
+{
+    <a id="btnBuyNow" class="add-product-btn handlee-font hover-btn" style="bottom: 42px; right: 42px; position: fixed;">Buy Now</a>
+    <div class="cart-items-container">
+
+    @foreach(var product in Model.CartProducts)
+    {
+            <div class="cartItem">
+                <div style="width: 100%; height: 50px; display: flex; justify-content: center; align-items: center;">
+                    <div style="width: 75%; display: flex; justify-content: start; align-items: center;">
+                        <label style="font-size: 25px; margin-left: 10px;" class="handlee-font">@product.ProductTitle</label>
+                    </div>
+                    <div style="width: 25%; display: flex; justify-content: end; align-items: center;">                        
+                        <label style="font-size: 25px; margin-right: 10px;" class="handlee-font">@product.ProductCost.ToString("c")</label>
+                    </div>
+                </div>
+                <div style="width: 100%; height: 200px; display: flex; justify-content: end; align-items: center;">
+                    <div style="overflow: hidden; width: 35%; height: 100%; display: flex; justify-content: center; align-items: center;">
+                        <img style="width: 100%; height: auto; max-height: 190px;" src="@(product.ProductThumbnailPhotoUrl == "" ? "/Images/no_image_png_934948.jpg" : product.ProductThumbnailPhotoUrl)"/>
+                    </div>
+                    <div style="width: 65%; height: 100%;"> 
+                        <div style="padding: 15px; width: 100%; height: 70%; display: flex; justify-content: center; align-items: center;">
+                            <label style="font-size: 20px;" class="handlee-font">@product.ProductDescription</label>
+                        </div>
+                        <div style="padding: 15px; width: 100%; height: 30%; display: flex; justify-content: end; align-items: center;">
+                            <a class="remove-cart-item-button handlee-font hover-btn" onclick="RemoveCartItem(this);" data-product-id="@product.ProductId">Remove Item</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    }
+        <h1 style="margin-top: 10px;" class="handlee-font">Total: @Model.Total.ToString("c")</h1>
+    </div>    
+
+    <div id="modalCompleteOrder" class="modal_backdrop" style="display: none;">
+        <div class="modal-side">
+            <div style="display: flex; justify-content: center; align-items: center; border-bottom: 2px solid black; height: 54px;">
+                <div style="display: flex; justify-content: start; align-items: end; width: 75%; height: 100%;">
+                    <h1 style="margin: unset; margin-left: 15px; font-size: 32px;" class="handlee-font">Purchase Confirmation</h1>
+                </div>
+                <div style="display: flex; justify-content: end; align-items: start; width: 25%; height: 100%;">
+                    <a class="btnClosePurchaseConfirmation hover-btn" onclick="ClosePurchaseModal();"><i><i class="fa-solid fa-square-xmark"></i></i></a>
+                </div>
+            </div>
+            <div style="height: 400px; width: 100%; overflow: auto; ">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th style="width: 150px;">
+                                Item
+                            </th>
+                            <th style="width: 250px;">
+                                Title
+                            </th>
+                            <th style="width: 100px;">
+                                Cost
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach(var item in Model.CartProducts)
+                        {
+                            <tr>
+                                <td style="height: 80px; display: flex; justify-content: center; align-items: center;"><img style="height: 100%; width: auto;" src="@(item.ProductThumbnailPhotoUrl == "" ? "/Images/no_image_png_934948.jpg" : item.ProductThumbnailPhotoUrl)" /></td>
+                                <td style="height: 80px;">@item.ProductTitle</td>
+                                <td style="height: 80px;">@item.ProductCost.ToString("c")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div style="height: 138px; width: 100%; border-top: 2px solid black; position: relative;">
+               <label style="font-size: 30px; margin-left: 10px;" class="handlee-font">Customer Address:</label>
+               <div>
+                    <textarea id="txtCustomerAddress" style="height: 85px; width: 350px; margin-left: 15px;" class="form-control" cols="10"></textarea>
+               </div>
+               <div id="customerEmailValidation" style="height: 50px; width: 217px; position: absolute; bottom: 9px; right: 10px; border: 2px dashed red; display: none; justify-content: center; align-items: center;">
+                   <label style="font-size: 15px; color: red; font-style: italic; font-weight: bold;" class="handlee-font">Please enter a shipping address</label>
+               </div>
+            </div>
+            <div style="height: 50px; width: 100%; display: flex; justify-content: start; align-items: center; border-bottom: 2px solid black; border-top: 2px solid black;">
+                <label style="font-size: 30px; margin-left: 15px;" class="handlee-font">Total: @Model.Total.ToString("c")</label>
+            </div>
+            <div style="height: 100px; width: 100%; display: flex; justify-content: center; align-items: center;">
+                <a id="btnConfirmPurchase" class="add-product-btn handlee-font hover-btn" style="width: 190px; margin-right: 5px;">Confirm Purchase</a>
+                <a class="remove-cart-item-button handlee-font hover-btn" style="width: 190px; margin-left: 5px;" onclick="ClosePurchaseModal();">Cancel Purchase</a>
+            </div>
+        </div>
+    </div>
+
+
+}
+
+<script>
+    function RemoveCartItem(element){
+        var productId = $(element).attr("data-product-id");
+        var keys = getCookie("_cartKeys");
+        var result = keys.split(/[,]+/);
+        var storeKeys = "";
+
+        for (let i = 0; i < result.length; i++) {
+          if(result[i] != productId)
+          {
+              if(storeKeys == "")
+              {
+                storeKeys = storeKeys + result[i].toString();
+              }
+              else{
+                storeKeys = storeKeys + "," + result[i].toString();
+              }
+          }
+        }
+        
+        document.cookie = "_cartKeys=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        setCookie("_cartKeys", storeKeys, 5);
+        SetCartCount();
+
+        var url = '@Url.Action("Cart", "Home", new { productKeys = "keys" })';
+        url = url.replace("keys", storeKeys);
+        window.location.href = url;
+    }
+
+    $("#btnBuyNow").click(function(){
+        $("#modalCompleteOrder").css("display", "revert");
+        $('html, body').css({
+            overflow: 'hidden',
+            height: '100%'
+        });
+    });
+
+    $("#btnConfirmPurchase").click(function(){
+        if(confirm("Are you sure you would like to complete this purchase?")){
+            if($("#txtCustomerAddress").val() == "")
+            {
+                $("#customerEmailValidation").css("display", "flex");
+            }
+            else
+            {
+                var keys = getCookie("_cartKeys");
+                var total = @Model.Total;
+                var dataValue = JSON.stringify({
+                        productKeys: keys,
+                        customerTotal: total,
+                        customerAddress: $("#txtCustomerAddress").val()
+                    });
+
+                $.ajax({
+                    url: '@Url.Action("CompleteTransaction")',
+                    data: dataValue,
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        RefreshPage();
+                    }
+                });
+            }
+        }   
+    });
+
+    function RefreshPage(){
+        var url = '@Url.Action("Cart", "Home", new { isPurchaseSuccess = true })';
+        window.location.href = url;
+    }
+
+    function ClosePurchaseModal(){
+        $("#modalCompleteOrder").css("display", "none");
+        $('html, body').css({
+            overflow: 'auto',
+            height: 'auto'
+        });    
+    }
+</script>

@@ -1,0 +1,79 @@
+﻿@model Credentials
+
+<style>
+    .div-login{
+        border-radius: 15px; 
+        height: 510px; 
+        width: 400px; 
+        display: flex; 
+        justify-content: center; 
+        align-items: center; 
+        margin-top: 25px; 
+        box-shadow: 1px -1px 56px 11px rgba(130,130,130,0.75);
+        -webkit-box-shadow: 1px -1px 56px 11px rgba(130,130,130,0.75);
+        -moz-box-shadow: 1px -1px 56px 11px rgba(130,130,130,0.75);
+        position: relative;
+        background-color: #FAEDCD;
+    }
+
+        .register-btn{
+        height: 42px; 
+        width: 120px; 
+        display: flex; 
+        justify-content: center; 
+        align-items: center;
+        text-decoration: none;
+        color: black !important;
+        cursor: pointer;
+        font-size: 20px;
+        background-color: #B8CCFF !important;
+        border-radius: 15px;
+    }
+
+    .login-btn{
+        height: 42px; 
+        width: 122px; 
+        display: flex; 
+        justify-content: center; 
+        align-items: center;
+        text-decoration: none;
+        color: black !important;
+        cursor: pointer;
+        font-size: 20px;
+        background-color: #D7FFB8 !important;
+        border-radius: 15px;
+    }
+</style>
+
+
+
+<div class="container" style="display: flex; justify-content: center; align-items: center;">
+    <div class="div-login">
+        @if(ViewBag.InvalidCredentialsMsg != null)
+        {
+            <p class="text-danger handlee-font" style="position: absolute; left: 10px; top: 10px; font-size: 19px; font-style: italic;">@ViewBag.InvalidCredentialsMsg</p>
+        }
+        <form asp-action="Validate" method="post">
+            <div style="width: 350px; padding: 20px;">
+                <h1 style="font-weight: 300; width: 100%; text-align: center;" class="handlee-font">Portal Login</h1>
+            </div>
+            <div style="width: 350px; padding: 20px;">
+                <label style="display: block; width: 100%; text-align: center; font-size: 22px;" class="handlee-font">Username:</label>
+                <input asp-for="@Model.Username" type="text" placeholder="Username" class="form-control handlee-font" style="display: block; width: 100%; text-align: center;"/>
+                <span asp-validation-for="@Model.Username" class="text-danger"></span>
+            </div>
+            <div style="width: 350px; padding: 20px;">
+                <label style="display: block; width: 100%; text-align: center; font-size: 22px;"class="handlee-font">Password:</label>
+                <input asp-for="@Model.Password" type="password" placeholder="Password" class="form-control handlee-font" style="display: block; width: 100%; text-align: center;"/>
+                <span asp-validation-for="@Model.Password" class="text-danger"></span>
+            </div>
+            <div style="display: flex; justify-content: center; align-items: center;">
+                <input type="submit" value="Login" style="margin-right: 3px; border: none;" class="login-btn handlee-font hover-btn"/>
+                <a style="margin-left: 3px;" class="register-btn handlee-font hover-btn" asp-controller="Home" asp-action="Register">Register</a>
+            </div>
+            <div style="display: flex; justify-content: center; align-items: center; margin-top: 5px;">
+                <a style="font-size: 12px; color: blue; text-decoration: underline; cursor: pointer;" class="handlee-font">Forgot Password</a>
+            </div>
+        </form>
+    </div>
+</div>

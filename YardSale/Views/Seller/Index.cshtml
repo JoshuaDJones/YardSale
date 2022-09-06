@@ -1,0 +1,357 @@
+﻿@model SellerProductsViewModal
+<style>
+    
+.productCard {
+    height: 445px;
+    width: 380px;
+    display: inline-grid;
+    margin: 12px;
+    border-radius: 15px;
+    box-shadow: 0px 7px 15px 0px rgba(0,0,0,0.3);
+    -webkit-box-shadow: 0px 7px 15px 0px rgba(0,0,0,0.3);
+    -moz-box-shadow: 0px 7px 15px 0px rgba(0,0,0,0.3);
+    background-color: #FAEDCD !important;
+}
+    .edit-product-btn{
+        height: 42px; 
+        width: 110px; 
+        display: flex; 
+        justify-content: center; 
+        align-items: center;
+        text-decoration: none;
+        color: black !important;
+        cursor: pointer;
+        font-size: 20px;
+        background-color: #B8CCFF !important;
+        border-radius: 15px;
+    }
+
+        .delete-product-btn{
+        height: 42px; 
+        width: 110px; 
+        display: flex; 
+        justify-content: center; 
+        align-items: center;
+        text-decoration: none;
+        color: black !important;
+        cursor: pointer;
+        font-size: 20px;
+        background-color: #FFBFBF !important;
+        border-radius: 15px;
+    }
+
+    .add-product-btn{
+        height: 42px; 
+        width: 152px; 
+        display: flex; 
+        justify-content: center; 
+        align-items: center;
+        text-decoration: none;
+        color: black !important;
+        cursor: pointer;
+        font-size: 20px;
+        background-color: #D7FFB8 !important;
+        border-radius: 15px;
+    }
+
+.modal_backdrop {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(120, 120, 120, 0.5);
+    height: 100%;
+    width: 100%;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+}
+
+.modal_reg {
+    margin-top: 50px;
+    width: 500px;
+    background-color: #FAEDCD !important;
+    border-radius: 15px;
+    box-shadow: 1px -1px 56px 11px rgba(130,130,130,0.75);
+    -webkit-box-shadow: 1px -1px 56px 11px rgba(130,130,130,0.75);
+    -moz-box-shadow: 1px -1px 56px 11px rgba(130,130,130,0.75);
+    height: 640px;
+}
+
+.modal_reg_header_div {
+    display: flex;
+    justify-content: end;
+    align-items: start;
+    height: 40px;
+    background-color: #007BFF;
+    border-top-right-radius: 15px;
+    border-top-left-radius: 15px;
+}
+
+.modal_reg_close_btn {
+    font-size: 25px;
+    margin-right: 9px;
+    color: white;
+    cursor: pointer;
+}
+
+.modal_reg_title_div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.modal_reg_content_div {
+    padding: 15px;
+    max-height: 500px;
+    overflow: auto;
+}
+
+@@media screen and (max-width: 600px) {
+
+    modal-reg {
+        background-color: pink !important;
+    }
+}
+
+    .modal-side {
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: auto;
+        transform: none;
+        min-height: 100%;
+        height: auto;
+        border-radius: 0;
+        background-color: white;
+        box-shadow: -9px -1px 34px 0px rgba(0,0,0,0.75);
+        -webkit-box-shadow: -9px -1px 34px 0px rgba(0,0,0,0.75);
+        -moz-box-shadow: -9px -1px 34px 0px rgba(0,0,0,0.75);
+        animation-name: sideModalAnimation;
+        animation-duration: .25s;
+        width: 600px;
+        background-color: #FAEDCD;
+    }
+
+@@keyframes sideModalAnimation {
+  0%   {right: -100px; opacity: 0;}
+  100% {right: 0px; opacity: 1.0;}
+}
+
+    .btnCLoseModalIcon{
+        font-size: 25px; 
+        margin-right: 7px;
+        color: black !important;
+        cursor: pointer;
+    }
+
+</style>
+
+    <h1 style="margin-bottom: 20px;" class="handlee-font">Products</h1>
+    <a class="add-product-btn hover-btn handlee-font" id="btnAddProduct"><i class="fa-solid fa-plus" style="margin-right: 3px; font-size: 15px;"></i>Add Product</a>
+<div class="container" style="display: flex; justify-content: center; align-items: center;">
+    <div>
+
+        @foreach (var product in Model.products)
+            {
+                <div class="productCard">
+                    <div style="display: flex; justify-content: center; align-items: center; width: 100%; height: 40px; border-bottom:1px solid lightgrey;">
+                        <div style="display: flex; justify-content: start; align-items: center; width: 80%; height: 100%;"><label class="handlee-font" style="font-size: 26px; margin-left: 10px;">@product.ProductTitle</label></div>
+                        <div style="display: flex; justify-content: end; align-items: center; width: 20%; height: 100%;"><label class="handlee-font" style="font-size: 26px; margin-right: 10px;">@product.ProductCost.ToString("c")</label></div>
+                    </div>
+                    <div style="display: flex; justify-content: start; align-items: center; height: 20px; width: 100%; overflow: hidden; padding: 10px;">
+                    @if(@product.ProductIsSold)
+                    {
+                        <label style="font-size: 15px; margin-right: 4px;" class="handlee-font">Status:</label><label style="font-size: 15px; color: red;" class="handlee-font">Sold</label>
+                    }
+                    else
+                    {
+                        @if(@product.ProductIsActive)
+                        {
+                            <label style="font-size: 15px; margin-right: 4px;" class="handlee-font">Status:</label><label style="font-size: 15px; color: green;" class="handlee-font">Active (public can see this item)</label>
+                        }
+                        else
+                        {
+                            <label style="font-size: 15px; margin-right: 4px;" class="handlee-font">Status:</label><label style="font-size: 15px; color: red;" class="handlee-font">Not Active (public cannot see this item)</label>
+                        }
+                    }
+                    </div>
+                    <div style="display: flex; justify-content: center; align-items: center; height: 205px; width: 100%; overflow: hidden; padding: 10px;">
+                        <img style="height: 100%; width: auto;" src="@(product.ProductThumbnailPhotoUrl == "" ? "/Images/no_image_png_934948.jpg" : product.ProductThumbnailPhotoUrl)"/>
+                    </div>
+                    <div style="display: flex; justify-content: center; align-items: center; height: 120px; width: 100%; padding: 15px;">
+                        <label style="font-size: 20px;" class="handlee-font">@product.ProductDescription</label>
+                    </div>
+                    <div style="display: flex; justify-content: center; align-items: center; height: 60px; width: 100%;">
+                        <a class="edit-product-btn hover-btn handlee-font" style="margin-right: 5px;" onclick="OpenEditModal(this);" data-product-id="@product.ProductId">Edit</a>
+                        <a class="delete-product-btn hover-btn handlee-font" style="margin-left: 5px;" onclick="DeleteConfirmModal(this);" data-product-id="@product.ProductId" data-product-title="@product.ProductTitle">Delete</a>
+                    </div>
+                 </div>
+            }     
+
+     </div>
+</div>
+
+<div id="modalAddProduct" class="modal_backdrop" style="display: none;">
+    <div class="modal_reg">
+        <div style="display: flex; justify-content: center; align-items: center; height: 10%; width: 100%; border-bottom: 2px solid black;">
+            <div style="display: flex; justify-content: start; align-items: end; width: 75%; height: 100%;">
+                <h1 style="margin: unset; margin-left: 15px; font-size: 32px;" class="handlee-font">Create Product</h1>
+            </div>
+            <div style="display: flex; justify-content: end; align-items: start; width: 25%; height: 100%;">
+                <a class="btnCLoseModalIcon hover-btn" onclick="CloseCreateModal();"><i><i class="fa-solid fa-square-xmark"></i></i></a>
+            </div>
+        </div>
+        <form asp-controller="Seller" asp-action="CreateProduct" enctype="multipart/form-data" method="post" role="form" style="height: 90%; width: 100%; overflow: auto;">
+            <div style="height: 85%; width: 100%; overflow: auto;">
+
+                <div style="padding: 5px 15px;">
+                    <label style="display: block; width: 100%; font-size: 18px;" class="handlee-font">Product Title:</label>
+                    <input asp-for="@Model.productCreateViewModel.Product.ProductTitle" type="text" class="form-control handlee-font" style="display: block; width: 100%; text-align: center;"/>
+                    <span asp-validation-for="@Model.productCreateViewModel.Product.ProductTitle" class="text-danger"></span>
+                </div>
+
+                <div style="padding: 5px 15px;">
+                    <label style="display: block; width: 100%;  font-size: 18px;" class="handlee-font">Product Description:</label>
+                    <input asp-for="@Model.productCreateViewModel.Product.ProductDescription" type="text" class="form-control handlee-font" style="display: block; width: 100%; text-align: center;"/>
+                    <span asp-validation-for="@Model.productCreateViewModel.Product.ProductDescription" class="text-danger"></span>
+                </div>
+
+                <div style="padding: 5px 15px;">
+                    <label style="display: block; width: 100%;   font-size: 18px;" class="handlee-font">Product Cost:</label>
+                    <input asp-for="@Model.productCreateViewModel.Product.ProductCost" type="text" class="form-control handlee-font" style="display: block; width: 100%; text-align: center;"/>
+                    <span asp-validation-for="@Model.productCreateViewModel.Product.ProductCost" class="text-danger"></span>
+                </div>
+
+                <div style="padding: 5px 15px;">
+                    <label style="display: block; width: 100%; font-size: 18px;" class="handlee-font">Product Category:</label>
+                    <select asp-for="@Model.productCreateViewModel.Product.Category.category_id" style="font-style: italic;" class="form-control handlee-font" asp-items="@Html.GetEnumSelectList<CategoryType>()"> 
+                        <option value="0">Select a Category</option>
+                    </select>
+                    <span asp-validation-for="@Model.productCreateViewModel.Product.Category.category_id" class="text-danger"></span>   
+                </div>
+                <div  style="padding: 5px 15px;">
+                    <label style="display: block; width: 100%; font-size: 18px;" class="handlee-font">Product Thumbnail:</label>
+                    <input asp-for="@Model.productCreateViewModel.Photo" type="file" class="form-control handlee-font" style="display: block; width: 100%; text-align: center;"/>
+                    <span asp-validation-for="@Model.productCreateViewModel.Photo" class="text-danger"></span>
+                </div>
+            </div>
+            <div style="height: 15%; width: 100%; display: flex; justify-content: center; align-items: center; border-top: 2px solid black;">
+                 <input type="submit" value="Save" class="edit-product-btn hover-btn handlee-font" style="margin-right: 3px; border: none;"/>
+                 <a onclick="CloseCreateModal();" class="delete-product-btn hover-btn handlee-font" style="margin-left: 3px;">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="modalEditProduct" class="modal_backdrop" style="@(Model.IsEdit ? "display: flex;" : "display: none;")">  
+    <div class="modal_reg">
+        <div style="display: flex; justify-content: center; align-items: center; height: 10%; width: 100%; border-bottom: 2px solid black;">
+            <div style="display: flex; justify-content: start; align-items: end; width: 75%; height: 100%;">
+                <h1 style="margin: unset; margin-left: 15px; font-size: 32px;" class="handlee-font">Edit Product</h1>
+            </div>
+            <div style="display: flex; justify-content: end; align-items: start; width: 25%; height: 100%;">
+                <a class="btnCLoseModalIcon hover-btn" onclick="CloseEditModal();"><i><i class="fa-solid fa-square-xmark"></i></i></a>
+            </div>
+        </div>
+        <form asp-controller="Seller" asp-action="EditProduct" enctype="multipart/form-data" method="post" role="form" style="height: 90%; width: 100%; overflow: auto;">
+            <div style="height: 85%; width: 100%; overflow: auto;">
+
+                <input asp-for="@Model.productEdit.ProductId" type="hidden"/>
+                <input asp-for="@Model.productEdit.UserId" type="hidden"/>
+
+                <div style="padding: 5px 15px;">
+                    <label style="display: block; width: 100%; font-size: 22px;" class="handlee-font">Product Title:</label>
+                    <input asp-for="@Model.productEdit.ProductTitle" type="text" class="form-control handlee-font" style="display: block; width: 100%; text-align: center;"/>
+                    <span asp-validation-for="@Model.productEdit.ProductTitle" class="text-danger"></span>
+                </div>
+
+                <div style="padding: 5px 15px;">
+                    <label style="display: block; width: 100%;  font-size: 22px;" class="handlee-font">Product Description:</label>
+                    <input asp-for="@Model.productEdit.ProductDescription" type="text" class="form-control handlee-font" style="display: block; width: 100%; text-align: center;"/>
+                    <span asp-validation-for="@Model.productEdit.ProductDescription" class="text-danger"></span>
+                </div>
+
+                <div style="padding: 5px 15px;">
+                    <label style="display: block; width: 100%; font-size: 22px;" class="handlee-font">Product Cost:</label>
+                    <input asp-for="@Model.productEdit.ProductCost" type="text" class="form-control handlee-font" style="display: block; width: 100%; text-align: center;"/>
+                    <span asp-validation-for="@Model.productEdit.ProductCost" class="text-danger"></span>
+                </div>
+
+                <div style="padding: 5px 15px;">
+                    <label style="display: block; width: 100%; font-size: 22px;" class="handlee-font">Product Category:</label>
+                    <select asp-for="@Model.productEdit.Category.category_id" style="font-style: italic;" class="form-control handlee-font" asp-items="@Html.GetEnumSelectList<CategoryType>()"> 
+                        <option value="0">Select a Category</option>
+                    </select>
+                    <span asp-validation-for="@Model.productEdit.Category.category_id" class="text-danger"></span>
+                </div>
+
+                @if(Model.productEdit.ProductThumbnailPhotoUrl != "")
+                {
+                    <div class="modal-control-group" style="display: flex; align-items: center; justify-content: center; height: 275px; overflow: hidden; width: 100%; margin-top:10px;">
+                        <img src="@Model.productEdit.ProductThumbnailPhotoUrl" style="height: 100%; width: auto;"/>
+                    </div>
+                }
+                else
+                {
+                    <div class="modal-control-group" style="display: flex; align-items: center; justify-content: center; height: 275px; overflow: hidden; width: 100%; margin-top:10px;">
+                        <img src="~/Images/no_image_png_934948.jpg" style="height: 100%; width: auto;"/>
+                    </div>                
+                }
+            </div>
+            <div style="height: 15%; width: 100%; display: flex; justify-content: center; align-items: center; border-top: 2px solid black;">
+                 <input type="submit" value="Save" class="edit-product-btn hover-btn handlee-font" style="margin-right: 3px; border: none;"/>
+                 <a onclick="CloseEditModal();" class="delete-product-btn hover-btn handlee-font" style="margin-left: 3px;">Cancel</a>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var ModelEdit;
+
+    @(Model.IsEdit ? "ModelEdit = true;" : "ModelEdit = false;")
+    $(document).ready(function(){
+        if(ModelEdit == true)
+        {
+            $('html, body').css("overflow", "hidden");
+        }
+    });
+
+    $("#btnAddProduct").click(function(){
+        $("#modalAddProduct").css("display", "flex");
+        $('html, body').css("overflow", "hidden");
+    }); 
+    
+    function CloseCreateModal(){
+        $("#modalAddProduct").css("display", "none");
+        $('html, body').css("overflow", "auto");
+    }
+
+    function CloseEditModal(){
+        $("#modalEditProduct").css("display", "none");
+        $('html, body').css("overflow", "auto");
+    }
+
+    function OpenEditModal(element){
+        var productId = $(element).attr("data-product-id");
+        var url = '@Url.Action("Index", "Seller", new { productId = "id" })';
+        url = url.replace("id", productId);
+        window.location.href = url;
+    }
+
+    function DeleteConfirmModal(element){
+        var productId = $(element).attr("data-product-id");
+        var productTitle = $(element).attr("data-product-title");
+
+        if(confirm("Are you sure you want to delete product: " + productTitle ))
+        {
+            var url = '@Url.Action("DeleteProduct", "Seller", new { productId = "id" })';
+            url = url.replace("id", productId);
+            window.location.href = url;
+        }
+    }
+</script>

@@ -1,0 +1,70 @@
+﻿@model Core.YardSale.Users.User
+@{ 
+    ViewData["Title"] = "Register";
+}
+
+<style>
+    .delete-product-btn{
+        height: 42px; 
+        width: 110px; 
+        display: flex; 
+        justify-content: center; 
+        align-items: center;
+        text-decoration: none;
+        color: black !important;
+        cursor: pointer;
+        font-size: 20px;
+        background-color: #FFBFBF !important;
+        border-radius: 15px;
+    }
+    .add-product-btn{
+        height: 42px; 
+        width: 110px; 
+        display: flex; 
+        justify-content: center; 
+        align-items: center;
+        text-decoration: none;
+        color: black !important;
+        cursor: pointer;
+        font-size: 20px;
+        background-color: #D7FFB8 !important;
+        border-radius: 15px;
+    }
+</style>
+
+<h1 class="handlee-font">Register</h1>
+<div class="container" style="padding: 20px;">
+    <div style="width: 530px;">
+        <form asp-controller="Home" asp-action="Register" enctype="multipart/form-data" method="post" role="form">
+            <div class="modal-control-group">
+                <label style="display: block; width: 100%; font-size: 18px;" class="handlee-font">First Name:</label>
+                <input asp-for="@Model.UserFirstName" type="text" class="form-control handlee-font" style="display: block; width: 100%; text-align: center;"/>
+                <span asp-validation-for="@Model.UserFirstName" class="text-danger"></span>
+            </div>
+            <div class="modal-control-group">
+                <label style="display: block; width: 100%;  font-size: 18px;" class="handlee-font">Last Name:</label>
+                <input asp-for="@Model.UserLastName" type="text" class="form-control handlee-font" style="display: block; width: 100%; text-align: center;"/>
+                <span asp-validation-for="@Model.UserLastName" class="text-danger"></span>
+            </div>
+            <div class="modal-control-group">
+                <label style="display: block; width: 100%; font-size: 18px;" class="handlee-font">Email:</label>
+                <input asp-for="@Model.UserEmail" type="text" class="form-control handlee-font" style="display: block; width: 100%; text-align: center;"/>
+                <span asp-validation-for="@Model.UserEmail" class="text-danger"></span>
+            </div>
+            <div class="modal-control-group">
+                <label style="display: block; width: 100%; font-size: 18px;" class="handlee-font">User Name:</label>
+                <input asp-for="@Model.UserUserName" type="text" class="form-control handlee-font" style="display: block; width: 100%; text-align: center;"/>
+                <span asp-validation-for="@Model.UserUserName" class="text-danger"></span>
+            </div>
+            <div class="modal-control-group">
+                <label style="display: block; width: 100%; font-size: 18px;" class="handlee-font">Password:</label>
+                <input asp-for="@Model.UserPassword" type="password" class="form-control handlee-font" style="display: block; width: 100%; text-align: center;"/>
+                <span asp-validation-for="@Model.UserPassword" class="text-danger"></span>
+            </div>
+            <div class="modal-control-group" style="height: 55px; display: flex; justify-content: center; align-items: end;">
+                <input type="submit" value="Save" class="add-product-btn handlee-font hover-btn" style="border:none; margin-right: 3px;"/>
+                <a asp-action="Login" class="delete-product-btn handlee-font hover-btn" style="margin-left: 3px;">Cancel</a>
+            </div>
+        </form>
+        </div>
+</div>

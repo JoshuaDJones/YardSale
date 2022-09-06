@@ -1,0 +1,32 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<style>
+    .browsebtn{
+        width: 175px;
+        height: 50px;
+        background-color: #B8CCFF;
+        display: flex; 
+        justify-content: center; 
+        align-items: center;
+        opacity: .8;
+        border-radius: 15px;
+        font-size: 22px;
+        text-decoration: none;
+        color: black !important;
+    }
+
+    .browsebtn:hover{
+        opacity: 1;
+    }
+</style>
+
+<div style="display: flex; justify-content: center; align-items: center;">
+    <div style="position: relative;">
+         <img src="/Images/lakeside-_-indoor-yard-sale.png" style="height: 575px; width: auto;" />
+         <div style="position: absolute; bottom: 30px; width: 100%; display: flex; justify-content: center;">
+            <a class="browsebtn handlee-font" asp-controller="home" asp-action="browse">Browse</a>
+         </div>
+    </div>
+</div>

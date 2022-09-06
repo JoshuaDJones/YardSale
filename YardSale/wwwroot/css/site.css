@@ -1,0 +1,49 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+    margin-bottom: 60px;
+}
+
+.nav-bar-link {
+    color: black;
+    text-decoration: none;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+    .nav-bar-link:hover {
+        opacity: .7;
+    }
+
+.handlee-font {
+    font-family: "Handlee"
+}
+
+.page-seller-menu {
+    width: 228px;
+    background-color: #FAEDCD;
+    position: absolute;
+    top: 68px;
+    right: 0;
+    box-shadow: 0px 2px 5px 0px rgba(168,168,168,0.75);
+    -webkit-box-shadow: 0px 2px 5px 0px rgba(168,168,168,0.75);
+    -moz-box-shadow: 0px 2px 5px 0px rgba(168,168,168,0.75);
+    z-index: 2;
+}
+
+.hover-btn:hover {
+    opacity: .8;
+}

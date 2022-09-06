@@ -1,0 +1,203 @@
+﻿@model OrdersViewModel
+
+<h1 style="margin-bottom: 20px;" class="handlee-font">Orders</h1>
+
+<style>
+.order-container{
+    width: 1000px; 
+    background-color: red; 
+    margin-top: 15px;
+    border-radius: 20px;
+    background-color: #FAEDCD;
+    box-shadow: 0px 5px 5px 0px rgba(138,138,138,0.75);
+    -webkit-box-shadow: 0px 5px 5px 0px rgba(138,138,138,0.75);
+    -moz-box-shadow: 0px 5px 5px 0px rgba(138,138,138,0.75);
+
+}
+
+    .mark-shipped-btn{
+        height: 50px; 
+        width: 235px; 
+        display: flex; 
+        justify-content: center; 
+        align-items: center;
+        text-decoration: none;
+        color: black !important;
+        cursor: pointer;
+        font-size: 20px;
+        background-color: #EE8F00 !important;
+        border-radius: 15px;
+    }
+    .mark-complete-btn{
+        height: 50px; 
+        width: 235px; 
+        display: flex; 
+        justify-content: center; 
+        align-items: center;
+        text-decoration: none;
+        color: black !important;
+        cursor: pointer;
+        font-size: 20px;
+        background-color: #00D916 !important;
+        border-radius: 15px;
+    }
+
+
+</style>
+
+
+<div class="container" style="margin-top: 34px;">
+    <div>
+        <label class="handlee-font" style="font-size: 25px; margin-right: 8px;">Order Status:</label>
+        <select id="ddlOrderStatus" asp-for="@Model.LkOrderStatusId" style="width: 220px; display: inline-block;" class="form-control" asp-items="@Html.GetEnumSelectList<OrderStatusType>()"> 
+            <option value="0">Select a Status</option>
+        </select>
+    </div>
+    <div>
+        @foreach(var order in Model.Orders)
+        {
+            <div class="order-container">
+                <div style="height: 60px; display: flex; justify-content: center; align-items: center;">
+                    <div style="width: 10%; height: 100%; display: flex; justify-content: center; align-items: center;">
+                        <a onclick="Toggle(this);" data-toggle-state="0" style="font-size: 32px; cursor: pointer;"><i class="fa-solid fa-chevron-down"></i></a>
+                    </div>
+                    <div style="width: 55%; height: 100%; display: flex; justify-content: center; align-items: center;">
+                        @if(order.LkOrderStatus.LkOrderStatusId == 1)
+                        {
+                            <label style="font-size: 25px; margin-right: 8px;" class="handlee-font">Order Date:</label><label style="font-size: 22px; color: #D6CD00;" class="handlee-font">@order.OrderDateTime.ToLongDateString()</label>
+                        }                        
+                        @if(order.LkOrderStatus.LkOrderStatusId == 2)
+                        {
+                            <label style="font-size: 25px; margin-right: 8px;" class="handlee-font">Order Date:</label><label style="font-size: 22px; color: #EE8F00;" class="handlee-font">@order.OrderDateTime.ToLongDateString()</label>
+                        }                        
+                        @if(order.LkOrderStatus.LkOrderStatusId == 3)
+                        {
+                            <label style="font-size: 25px; margin-right: 8px;" class="handlee-font">Order Date:</label><label style="font-size: 22px; color: #E11212;" class="handlee-font">@order.OrderDateTime.ToLongDateString()</label>
+                        }                        
+                        @if(order.LkOrderStatus.LkOrderStatusId == 4)
+                        {
+                            <label style="font-size: 25px; margin-right: 8px;" class="handlee-font">Order Date:</label><label style="font-size: 22px; color: #00D916;" class="handlee-font">@order.OrderDateTime.ToLongDateString()</label>
+                        }
+                    </div>
+                    <div style="width: 35%; height: 100%; display: flex; justify-content: center; align-items: center;">
+                        @if(order.LkOrderStatus.LkOrderStatusId == 1)
+                        {
+                            <label style="font-size: 25px; margin-right: 8px;" class="handlee-font">Status:</label><label style="font-size: 22px; color: #D6CD00;" class="handlee-font">@order.LkOrderStatus.LkOrderStatusDesc</label>
+                        }                        
+                        @if(order.LkOrderStatus.LkOrderStatusId == 2)
+                        {
+                            <label style="font-size: 25px; margin-right: 8px;" class="handlee-font">Status:</label><label style="font-size: 22px; color: #EE8F00;" class="handlee-font">@order.LkOrderStatus.LkOrderStatusDesc</label>
+                        }                        
+                        @if(order.LkOrderStatus.LkOrderStatusId == 3)
+                        {
+                            <label style="font-size: 25px; margin-right: 8px;" class="handlee-font">Status:</label><label style="font-size: 22px; color: #E11212;" class="handlee-font">@order.LkOrderStatus.LkOrderStatusDesc</label>
+                        }                        
+                        @if(order.LkOrderStatus.LkOrderStatusId == 4)
+                        {
+                            <label style="font-size: 25px; margin-right: 8px;" class="handlee-font">Status:</label><label style="font-size: 22px; color: #00D916;" class="handlee-font">@order.LkOrderStatus.LkOrderStatusDesc</label>
+                        }
+                    </div>
+                </div>
+                <div class="toggle-div" style="height: 185px; margin: 0px 20px; border-top: 2px solid black; display: none">
+                    <div style="display: flex; justify-content: center; align-items: center; height: 50px; background-color: white;">
+                        <div style="width: 50%; height: 100%; display: flex; justify-content: start; align-items: center;"><label style="margin-left: 10px; font-size: 25px;" class="handlee-font">Product Name: @order.Product.ProductTitle</label></div>
+                        <div style="width: 50%; height: 100%; display: flex; justify-content: end; align-items: center;"><label style="margin-right: 10px; font-size: 25px;" class="handlee-font">Price: @order.OrderTotal.ToString("c")</label></div>
+                    </div>
+                    <div style="display: flex; justify-content: center; align-items: center; height: 135px;">
+                        <div style="width: 25%; height: 100%; display: flex; justify-content: start; align-items: start;">
+                            <label style="margin-right: 10px; font-size: 25px;" class="handlee-font">Customer Address:</label>
+                        </div>
+                        <div style="width: 50%; height: 100%; display: flex; justify-content: center; align-items: center;">
+                            <label style="margin-right: 10px; font-size: 20px;" class="handlee-font">@order.OrderCustomerAddress </label>
+                        </div>                        
+                        <div style="width: 25%; height: 100%; display: flex; justify-content: end; align-items: center;">
+                            <form asp-action="UpdateOrderStatus" method="post">
+                                <input value="@order.LkOrderStatus.LkOrderStatusId" type="hidden" name="orderStatusId"/>
+                                <input value="@order.OrderId" type="hidden" name="orderId"/>
+                                <input value="@Model.LkOrderStatusId" type="hidden" name="searchStatusId"/>
+                                 @if(order.LkOrderStatus.LkOrderStatusId == 1)
+                                 {
+                                    <input value="Mark as Shipped" type="submit" style="border: none;" class="handlee-font mark-shipped-btn hover-btn"/>
+                                 }                        
+                                 @if(order.LkOrderStatus.LkOrderStatusId == 2)
+                                 {
+                                    <input value="Mark as Complete" type="submit" style="border: none;" class="handlee-font mark-complete-btn hover-btn"/>
+                                 }                        
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+        }
+    </div>
+</div>
+
+<script>
+    $("#ddlOrderStatus").change(function(){
+        var statusId = $(this).val();
+        var url = '@Url.Action("OrdersList", "Seller", new { LkOrderStatusId = "id" })';
+        url = url.replace("id", statusId);
+        window.location.href = url;
+    });
+
+    function Toggle(element){
+        console.log("hit");
+        var state = $(element).attr("data-toggle-state");
+        var $container = $(element).parent().parent().parent();
+        var $div = $container.find(".toggle-div");
+
+        if(state == 0)
+        {
+            $(element).attr("data-toggle-state", "1");
+            $div.css("display", "revert");
+            $(element).find('i').removeClass("fa-solid fa-chevron-down");
+            $(element).find('i').addClass("fa-solid fa-chevron-up");
+        }
+        else{
+            $(element).attr("data-toggle-state", "0");
+            $div.css("display", "none");
+            $(element).find('i').removeClass("fa-solid fa-chevron-up");
+            $(element).find('i').addClass("fa-solid fa-chevron-down");
+        }
+    }
+
+     function ChangeOrderStatus(element){
+        var orderStatus = $(element).attr("data-order-state");
+        var id = $(element).attr("data-product-id");
+
+        var dataValue = JSON.stringify({
+                ProductId: id,
+                StatusId: orderStatus,
+            });
+
+            console.log(dataValue);
+
+        $.ajax({
+            url: '@Url.Action("ChangeOrderStatus")',
+            data: dataValue,
+            type: 'POST',
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+            }
+        });
+        RefreshPage();
+    }
+
+    function RefreshPage(){
+        var statusId = $("#ddlOrderStatus").val();
+        var url = '@Url.Action("OrdersList", "Seller", new { LkOrderStatusId = "status" })';
+        url = url.replace("status", statusId);
+        window.location.href = url;
+    }
+
+</script>
+@*
+
+                            @if(order.LkOrderStatus.LkOrderStatusId == 1)
+                            {
+                                <a class="handlee-font mark-shipped-btn hover-btn" onclick="" data-product-id="@order.Product.ProductId" data-order-state="@order.LkOrderStatus.LkOrderStatusId">Mark As Shipped</a>
+                            }
+                            @if(order.LkOrderStatus.LkOrderStatusId == 2)
+                            {
+                                <a class="handlee-font mark-complete-btn hover-btn" onclick="" data-product-id="@order.Product.ProductId" data-order-state="@order.LkOrderStatus.LkOrderStatusId">Mark As Complete</a>
+                            }*@

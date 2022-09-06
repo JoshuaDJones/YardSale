@@ -1,0 +1,154 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - YardSale</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+            <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+            <link href='https://fonts.googleapis.com/css?family=Handlee' rel='stylesheet'/>
+
+
+@*    <link rel="stylesheet" href="~/YardSale.styles.css" asp-append-version="true" />
+
+*@    <link rel="stylesheet" href="~/lib/font-awesome/css/all.css" asp-append-version="true" />
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+</head>
+<body style="background-color: #FEFAE0 !important;">
+    <header>
+        <nav class="navbar border-bottom box-shadow mb-3" style="background-color: #E9EDC9 !important; box-shadow: 0px 2px 5px 0px rgba(168,168,168,0.75);
+-webkit-box-shadow: 0px 2px 5px 0px rgba(168,168,168,0.75);
+-moz-box-shadow: 0px 2px 5px 0px rgba(168,168,168,0.75);">
+            <div class="container-fluid" style="width: 100%;">
+                <div  style=" width: 20%; display: flex; justify-content: space-around;">
+                    <a class="nav-bar-link handlee-font" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                    <a class="nav-bar-link handlee-font" asp-area="" asp-controller="Home" asp-action="Browse">Browse</a>
+                    @if(User.Identity.IsAuthenticated)
+                    {
+                        <a class="nav-bar-link handlee-font" asp-area="" asp-controller="Home" asp-action="Logout">Logout</a>
+                    }
+                    @if(!User.Identity.IsAuthenticated)
+                    {
+                        <a class="nav-bar-link handlee-font" asp-area="" asp-controller="Home" asp-action="Login">Login</a>
+                    }
+                </div>
+                <div  style=" width:60%; display: flex; justify-content: center; align-items: center;">
+                    <a class="nav-bar-link handlee-font" style="font-size: 30px;" asp-area="" asp-controller="Home" asp-action="Index">YardSale</a>
+                </div>
+                <div style="width: 20%;  display: flex; justify-content: end; align-items: center; position: relative;">
+                    <a id="btnNavCart" class="nav-bar-link" style="margin-right: 20px; z-index: 2"><i class="fa-solid fa-cart-shopping"></i></a>
+                    <div id="cartCountDiv" style="position: absolute; right: -10px; top: -11px; height: 36px; z-index: 1; width: 36px; background-color: #FAEDCD; border-radius: 50%; display: none; justify-content: center; align-items: center;">
+                        <label id="lblCartCount" class="handlee-font" style="font-size: 16px; font-weight: bold;"></label>
+                    </div>    
+                </div>
+            </div>
+        </nav>
+        @if(User.Identity.IsAuthenticated)
+        {
+            <div class="page-seller-menu">
+                <div style="height: 30px; width: 100%; border-bottom: 1px solid grey; display:flex; justify-content: start; align-items: center;">
+                    <a id="btnSellerMenuToggle" class="nav-bar-link handlee-font" style="margin-left: 10px; font-size: 20px;"><i id="chevronIcon" style="font-size: 15px; margin-right: 5px;" class="fa-solid fa-chevron-up" style=" margin-right: 5px;"></i>Seller Tools</a>
+                </div>
+                <div id="sellerMenuLinks" data-menu-state="1">
+                    <a class="nav-bar-link handlee-font" style=" display: block; text-align: center;" asp-area="" asp-controller="Seller" asp-action="Index">Products</a>
+                    <a class="nav-bar-link handlee-font" style="display: block; text-align: center;" asp-area="" asp-controller="Seller" asp-action="OrdersList">Orders</a>
+                </div>
+            </div>        
+        }
+    </header>
+
+    <div class="container" style="min-height: 500px;">
+        <main role="main" class="pb-3" >
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2022 - YardSale - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    
+    <script type="text/javascript">
+        $(document).ready(function(){
+            SetCartCount();
+        });
+
+        $("#btnNavCart").click(function(){
+            var keys = getCookie("_cartKeys");
+            var url = '@Url.Action("Cart", "Home", new { productKeys = "keys" })';
+            url = url.replace("keys", keys);
+            window.location.href = url;
+        });
+
+        $("#btnSellerMenuToggle").click(function(){
+            if($("#sellerMenuLinks").attr("data-menu-state") == 1){
+                $("#sellerMenuLinks").fadeOut("fast");
+                $("#sellerMenuLinks").attr("data-menu-state", 0);
+                $("#chevronIcon").removeClass("fa-solid fa-chevron-up");
+                $("#chevronIcon").addClass("fa-solid fa-chevron-down");
+            }else{
+                $("#sellerMenuLinks").fadeIn("fast");
+                $("#sellerMenuLinks").attr("data-menu-state", 1);
+                $("#chevronIcon").removeClass("fa-solid fa-chevron-down");
+                $("#chevronIcon").addClass("fa-solid fa-chevron-up");
+            }
+        });
+
+    function SetCartCount(){
+            var keys = getCookie("_cartKeys");
+            var result = keys.split(/[,]+/);
+            var count = 0;
+
+            for (let i = 0; i < result.length; i++) {
+              count++;
+              console.log(count);
+            }
+
+            $("#lblCartCount").text(count);
+
+            if(keys != ""){
+                $("#cartCountDiv").css("display", "flex");
+            }
+            else{
+                $("#cartCountDiv").css("display", "none");
+            }
+    }
+        
+    function eraseCookie(name) {   
+        document.cookie = name+'=; Max-Age=-99999999;';  
+    }
+
+    function setCookie(cname, cvalue, exdays) {
+        const d = new Date();
+        d.setTime(d.getTime() + (exdays*24*60*60*1000));
+        let expires = "expires="+ d.toUTCString();
+        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    }
+
+    function getCookie(cname) {
+        let name = cname + "=";
+        let decodedCookie = decodeURIComponent(document.cookie);
+        let ca = decodedCookie.split(';');
+        for(let i = 0; i <ca.length; i++) {
+          let c = ca[i];
+          while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+          }
+          if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+          }
+        }
+        return "";
+    }
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+</html>

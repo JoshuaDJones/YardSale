@@ -1,0 +1,123 @@
+﻿@model BrowseViewModel
+
+<style>
+    .product-card{
+        margin: 15px; 
+        width: 380px; 
+        height: 450px; 
+        display: inline-grid;
+        border-radius: 20px;
+        box-shadow: 2px 3px 5px 0px rgba(0,0,0,0.75);
+        -webkit-box-shadow: 2px 3px 5px 0px rgba(0,0,0,0.75);
+        -moz-box-shadow: 2px 3px 5px 0px rgba(0,0,0,0.75);
+        background-color: #FAEDCD;
+        position: relative;
+    }
+
+    .product-card-btn{
+        height: 44px; 
+        width: 165px; 
+        display: flex; 
+        justify-content: center; 
+        align-items: center;
+        text-decoration: none;
+        color: black !important;
+        cursor: pointer;
+        font-size: 20px;
+        background-color: #B8CCFF !important;
+        border-radius: 15px;
+    }
+
+    .product-card-btn:hover{
+        opacity: .8;
+    }
+</style>
+
+<div class="container" style="margin-top: 34px;">
+    <div>
+        <label class="handlee-font" style="font-size: 25px; margin-right: 8px;">Category:</label>
+        <select id="ddlCategory" asp-for="@Model.CategoryId" style="width: 220px; display: inline-block;" class="form-control" asp-items="@Html.GetEnumSelectList<CategoryType>()"> 
+            <option value="0">Select a Category</option>
+        </select>
+    </div>
+
+    <div style="margin-top: 15px;">
+        @foreach(var item in Model.Products)
+        {
+            <div class="product-card">
+               <div style="height: 50px; width: 100%; display: flex; justify-content: center; align-items: center; border-bottom:1px solid lightgrey;">
+                   <div style="height: 100%; width: 80%; display: flex; justify-content: start; align-items: center;"><label style="font-size: 30px; margin-left: 10px;" class="handlee-font">@item.ProductTitle</label></div>
+                   <div style="height: 100%; width: 20%; display: flex; justify-content: end; align-items: center;"><label style="font-size: 30px; margin-right: 10px;" class="handlee-font">@item.ProductCost.ToString("c")</label></div>
+               </div>
+               <div style="height: 200px; width: 100%; display: flex; justify-content: center; align-items: center; overflow: hidden;">
+                   <img style="height: 100%; width: auto;" src="@(item.ProductThumbnailPhotoUrl == "" ? "/Images/no_image_png_934948.jpg" : item.ProductThumbnailPhotoUrl)"/>
+               </div>
+               <div style="height: 125px; width: 100%; display: flex; justify-content: center; align-items: center;">
+                   <label style="font-size: 18px;" class="handlee-font">@item.ProductDescription</label>
+               </div>
+               <div style="height: 75px; width: 100%; display: flex; justify-content: center; align-items: center;">
+                   <a class="product-card-btn handlee-font" onclick="StoreProductKey(this);" data-product-key="@item.ProductId">Add to Cart</a>
+               </div>
+               <div class="cart-added-confirmation" style="position: absolute; left: 0; bottom: 0; height: 90px; width: 100%; display: none; justify-content: center; align-items: center; padding: 10px;">
+                   <div style="height: 100%; width: 100%; background-color: #D7FFB8; display: flex; justify-content: center; align-items: center;">
+                       <label style="font-size: 20px;" class="handlee-font">Added to your cart!</label>
+                   </div>
+               </div>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    $("#ddlCategory").change(function(){
+        var categoryId = $(this).val();
+        var url = '@Url.Action("Browse", "Home", new { categoryId = "id" })';
+        url = url.replace("id", categoryId);
+        window.location.href = url;
+    });
+
+    $("#btnGetCookies").click(function(){
+          let username = getCookie("_cartKeys");
+          $("#getcookielbl").text(username);
+    });
+
+    $("#btnSetCookie").click(function(){
+        if($("#txtCookieToSave").val() != "")
+        {
+           var keys = getCookie("_cartKeys");
+
+           if(keys == ""){
+               console.log("Keys was empty dont delete");
+               keys = $("#txtCookieToSave").val();
+               setCookie("_cartKeys", keys, 5);
+               
+           }
+           else{
+               console.log("Keys was not empty do delete");
+               keys = $("#txtCookieToSave").val() + keys;
+               eraseCookie("_cartKeys");
+               setCookie("_cartKeys", keys, 5);
+           }
+        }
+    });
+
+    function StoreProductKey(element){
+       var productKey = $(element).attr("data-product-key");
+       let keys = getCookie("_cartKeys");
+
+       if(keys == ""){
+           keys = + productKey;
+           setCookie("_cartKeys", keys, 5);
+           
+       }
+       else{
+           keys = keys + "," + productKey;
+           document.cookie = "_cartKeys=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+           setCookie("_cartKeys", keys, 5);
+       }
+
+       SetCartCount();
+
+       $(element).parent().parent().find(".cart-added-confirmation").fadeIn("fast");
+    }
+</script>
